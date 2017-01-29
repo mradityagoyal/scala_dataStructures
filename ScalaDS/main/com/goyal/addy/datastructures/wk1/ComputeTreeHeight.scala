@@ -1,5 +1,4 @@
 package com.goyal.addy.datastructures.wk1
-
 import scala.io.StdIn
 import scala.collection._
 import scala.collection.mutable.ListBuffer
@@ -15,7 +14,7 @@ object ComputeTreeHeight extends App {
     val parents: Array[Int] = secondLine.split(" ").map(_.toInt)
 
     val root = parseTree(numberOfNodes, parents)
-    println(root.height)
+    println(getHeightIterative(root))
 
   }
   //parse a tree and return the root node from the parentArray representation
@@ -64,6 +63,32 @@ object ComputeTreeHeight extends App {
       createNode(i)
     }
     root
+  }
+
+  /*
+   * returns the height of the tree given the root node. 
+   * calculates the height iteratively
+   */
+  def getHeightIterative(root: Node): Int = {
+    val q = mutable.Queue[Node]()
+    q.enqueue(root)
+    var height = 0
+    while (true) {
+      //      nodeCount(queue size) indicates number of nodes
+      //      at current level
+      var nodeCount = q.length
+      if (nodeCount == 0) return height
+
+      height += 1
+      //      Dequeue all nodes of current level and Enqueue
+      //        # all nodes of next level
+      while (nodeCount > 0) {
+        val nd = q.dequeue()
+        nd.children.foreach(q.enqueue(_))
+        nodeCount -= 1
+      }
+    }
+    height
   }
 }
 
